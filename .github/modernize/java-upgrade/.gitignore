@@ -1,0 +1,21 @@
+
+# Archivos generados por Java y Maven
+target/
+*.class
+
+# Archivos generados por IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Variables de entorno y credenciales
+.env
+.env.*
+!.env.example
+
+# Configuración local que podría contener contraseñas
+application-local.properties
+application-local.yml
+application-local.yaml
