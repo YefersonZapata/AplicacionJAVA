@@ -3,12 +3,15 @@ package edu.iudigital.rrhh.ui;
 import edu.iudigital.rrhh.exception.ValidacionException;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
 
 final class UIUtil {
     private UIUtil() {}
@@ -38,6 +41,36 @@ final class UIUtil {
         tabla.setAutoCreateRowSorter(true);
         tabla.setRowHeight(23);
         tabla.getTableHeader().setFont(tabla.getTableHeader().getFont().deriveFont(Font.BOLD));
+    }
+
+    static void aplicarSoloLectura(Component componente) {
+        if (componente instanceof JTable) return;
+        if (componente instanceof JButton boton) {
+            String accion = boton.getText().trim().toLowerCase(java.util.Locale.ROOT);
+            if (accion.equals("recargar") || accion.startsWith("limpiar")) return;
+            for (ActionListener listener : boton.getActionListeners()) {
+                boton.removeActionListener(listener);
+            }
+            boton.addActionListener(
+                    e ->
+                            JOptionPane.showMessageDialog(
+                                    boton,
+                                    "No tienes permisos para realizar esta acción.",
+                                    "Permiso denegado",
+                                    JOptionPane.WARNING_MESSAGE));
+            return;
+        }
+        if (componente instanceof JComboBox<?> combo) {
+            combo.setEnabled(false);
+            return;
+        }
+        if (componente instanceof JTextComponent campo) {
+            campo.setEditable(false);
+            return;
+        }
+        if (componente instanceof Container contenedor) {
+            for (Component hijo : contenedor.getComponents()) aplicarSoloLectura(hijo);
+        }
     }
 
     static void ocultarColumna(JTable tabla, int indice) {

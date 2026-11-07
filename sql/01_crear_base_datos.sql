@@ -76,4 +76,19 @@ CREATE TABLE IF NOT EXISTS formacion_academica (
       REFERENCES funcionarios (id_funcionario) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS usuarios (
+    id_usuario BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_funcionario BIGINT UNSIGNED NULL,
+    nombre_usuario VARCHAR(60) NOT NULL,
+    sal VARBINARY(16) NOT NULL,
+    hash_contrasena VARBINARY(32) NOT NULL,
+    rol VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id_usuario),
+    UNIQUE KEY uq_usuarios_nombre (nombre_usuario),
+    UNIQUE KEY uq_usuarios_funcionario (id_funcionario),
+    CONSTRAINT chk_usuarios_rol CHECK (rol IN ('ADMIN_RRHH', 'FUNCIONARIO')),
+    CONSTRAINT fk_usuarios_funcionario FOREIGN KEY (id_funcionario)
+      REFERENCES funcionarios (id_funcionario) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 -- El script de datos iniciales en 02_insertar_datos_ejemplo.sql agrega los valores de catálogo y la demostración.
